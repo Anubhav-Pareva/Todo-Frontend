@@ -22,8 +22,8 @@ export const taskapiSlice = createApi({
             })
         }),
         getAllTask: builder.query({
-            query:()=>({
-                url:"/task/getalltask"
+            query:({page=1, limit=5})=>({
+                url:`/task/getalltask?page=${page}&limit=${limit}`
             }),
             providesTags:["Task"]
         }),

@@ -1,9 +1,19 @@
-import { Box, Typography } from "@mui/material";
+"use client"
+import { Box, Pagination, Typography } from "@mui/material";
 import TaskCard from "./TaskCard";
 import { useGetAllTaskQuery } from "@/redux/apis/taskApi";
+import { useState } from "react";
 
 export default function TaskList(){
-  const {data, isLoading, isError, error} = useGetAllTaskQuery();
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 5;
+  const {data, 
+          isLoading, 
+          isError, 
+          error} = useGetAllTaskQuery({ page:currentPage, 
+                                        limit:limit});
+  const totalPageCount = Math.ceil(data?.total / limit) || 1;
+
   if(isLoading){
     return(
       <Typography>Loading</Typography>
@@ -17,6 +27,7 @@ export default function TaskList(){
   else{
     const result = data?.result ?? [];
     return (
+      <>
       <Box
         sx={{
           backgroundColor: "#EFEFEF",
@@ -35,6 +46,15 @@ export default function TaskList(){
                 <TaskCard key={index} task={task}/> 
               )))}
       </Box>
+      <Pagination count={totalPageCount} 
+                  page={currentPage}
+                  onChange={(event, value) => {
+                    setCurrentPage(value); // update local state
+                  }}
+                 
+                  variant="outlined" 
+                  color="primary" />
+      </>
     );
   }
 }
