@@ -2,16 +2,23 @@
 import { Box, Pagination, Typography } from "@mui/material";
 import TaskCard from "./TaskCard";
 import { useGetAllTaskQuery } from "@/redux/apis/taskApi";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import { userSelector } from "@/redux/slices/userSlice";
 
 export default function TaskList(){
   const [currentPage, setCurrentPage] = useState(1);
+  const { userId } = useSelector(userSelector); // assuming you store logged in user in redux
+  const queryParams = useMemo(() => ({  
+                                        page: currentPage, 
+                                        limit, 
+                                        userId: userId 
+                                      }), [currentPage, userId]);
   const limit = 5;
   const {data, 
           isLoading, 
           isError, 
-          error} = useGetAllTaskQuery({ page:currentPage, 
-                                        limit:limit});
+          error} = useGetAllTaskQuery(queryParams);
   const totalPageCount = Math.ceil(data?.total / limit) || 1;
 
   if(isLoading){
