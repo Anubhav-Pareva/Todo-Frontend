@@ -8,13 +8,13 @@ import { userSelector } from "@/redux/slices/userSlice";
 
 export default function TaskList(){
   const [currentPage, setCurrentPage] = useState(1);
-  const { userId } = useSelector(userSelector); // assuming you store logged in user in redux
+  const { userId } = useSelector(userSelector);
+  const limit = 5; // assuming you store logged in user in redux
   const queryParams = useMemo(() => ({  
                                         page: currentPage, 
                                         limit, 
                                         userId: userId 
                                       }), [currentPage, userId]);
-  const limit = 5;
   const {data, 
           isLoading, 
           isError, 
